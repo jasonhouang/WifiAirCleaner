@@ -1,0 +1,976 @@
+/**
+  ******************************************************************************
+  * @file    NearAirProtocol.c 
+  * @author  Adam Huang
+  * @version V1.0.0
+  * @date    05-Nov-2014
+  * @brief   NearAirProtocol receive data form cloud and send data to cloud.
+  ******************************************************************************
+  * @attention
+  *
+  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
+  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
+  * TIME. AS A RESULT, NEAR Inc. SHALL NOT BE HELD LIABLE FOR ANY
+  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
+  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
+  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  *
+  * <h2><center>&copy; COPYRIGHT 2014 Near Inc.</center></h2>
+  ******************************************************************************
+  */ 
+
+#include "MICOAppDefine.h"
+#include "NearAir.h"
+#include "PlatformUart.h"
+#include "SocketUtils.h"
+#include "debug.h"
+#include "platform.h"
+#include "MICONotificationCenter.h"
+#include "NearAirDefine.h"
+#include "PlatformRTC.h"
+    
+#include <stdio.h>
+
+
+#define nearair_log(M, ...) custom_log("NEARAIR", M, ##__VA_ARGS__)
+#define nearair_log_trace() custom_log_trace("NEARAIR")
+
+#define SECRETKEY  "qwertyuiop"
+#define PROTOCOL_VERSION  "01"
+
+static mico_timer_t _heatbeat_timer;
+mico_thread_t *heatbeat;
+static mico_mutex_t wifi_out_mutex;
+
+static int _recved_nearair_loopback_fd = -1;
+
+static char time_count[11] = "1234567890";
+static char nearair_sn[11] = "9000000999";
+static char usr_id[11] = "2085484566";
+static char req_time[11] = "1234567890";
+static bool heart_beat_rec = true;
+
+char *getstringtime(char *string_time)
+{
+    struct tm currentTime;
+    unsigned int t_count;
+    
+    PlatformRTCRead( &currentTime );
+    t_count = mktime(&currentTime);
+    sprintf(string_time,"%d",t_count);
+    return string_time;
+}
+
+
+OSStatus nearairProtocolInit(mico_Context_t * const inContext)
+{
+  nearair_log_trace();
+  OSStatus err = kUnknownErr;
+  (void)inContext;
+  struct sockaddr_t addr;
+
+  inContext->appStatus.isRemoteConnected = false;
+
+  _recved_nearair_loopback_fd = socket(AF_INET, SOCK_DGRM, IPPROTO_UDP);
+  addr.s_ip = IPADDR_LOOPBACK;
+  addr.s_port = NEARAIR_GEN_DATA_LOOPBACK_PORT;
+  err = bind(_recved_nearair_loopback_fd, &addr, sizeof(addr));
+  require_noerr( err, exit );
+  
+  mico_rtos_init_mutex(&wifi_out_mutex);
+exit:
+  return err;
+}
+
+OSStatus nearairWlanCommandProcess(unsigned char const*inBuf, int *inBufLen,mico_Context_t * const inContext,
+                                   nearair_Context_t * const airContent)
+{
+  nearair_log_trace();
+  OSStatus err = kUnknownErr;
+  
+  nearair_cmd_head_t *head = NULL;
+  char tempstr[11];
+  unsigned int CMD_CMD = 0;
+  *(char *)(inBuf + *inBufLen-1) = '\0';
+  nearair_log("inBuf is:%s,inBuflen is:%d",inBuf,*inBufLen);
+  
+  head = ( nearair_cmd_head_t *)malloc(sizeof(nearair_cmd_head_t) );
+  require_action( head, exit, err = kNoMemoryErr );
+  memset(head, 0x0, sizeof(nearair_cmd_head_t));
+  
+  strcpy( head->len ,strleft(tempstr,(char*)inBuf,4));
+  strcpy( head->time ,strmid(tempstr,(char*)inBuf,10,4));
+  strcpy( head->cmd ,strmid(tempstr,(char*)inBuf,4,14));
+  strcpy( head->ver ,strmid(tempstr,(char*)inBuf,2,18));
+  nearair_log("len:%s,time:%s,cmd:%s,ver:%s",head->len,head->time,head->cmd,head->ver);
+  
+  CMD_CMD = atoi(head->cmd);
+  if((CMD_CMD != CMD_LOGIN) && (CMD_CMD != CMD_HEAT_BEAT))
+  {
+	strcpy(usr_id,strmid(tempstr,(char*)inBuf,10,20));
+        strcpy(req_time,head->time);
+//	strncpy(nearair_sn,(const char *)buf+30,10);
+  }
+  
+  switch(CMD_CMD)
+  {
+    case CMD_LOGIN:
+      {
+        nearair_s2c_login_body *body = NULL;
+        body = ( nearair_s2c_login_body *)malloc(sizeof(nearair_s2c_login_body) );
+        require_action( body, exit, err = kNoMemoryErr );
+        memset(body, 0x0, sizeof(nearair_s2c_login_body));
+        
+        strcpy(body->sn,strmid(tempstr,(char *)inBuf,10,20));
+        strcpy(body->login_time,strmid(tempstr,(char *)inBuf,10,30));
+        strcpy(body->errno,strmid(tempstr,(char *)inBuf,4,40));
+        
+        nearair_log("sn:%s,login_time:%s,errno:%s",body->sn,body->login_time,body->errno);
+        if(!strcmp(body->errno,"0000"))
+        {
+          nearair_log("near air login success...");
+          wifi_send_nearair_sn(airContent);
+          mico_init_timer(&_heatbeat_timer,10000,heat_beat_handle,(void*)inContext);
+          mico_start_timer(&_heatbeat_timer);
+//         if(kNoErr != mico_rtos_create_thread(heatbeat, MICO_APPLICATION_PRIORITY-1, "Heart Beat", heat_beat_thread, 0x200, (void*)inContext) )
+//              nearair_log("create_heart_beat_thread error!");
+        }
+        else
+        {
+          inContext->appStatus.isRemoteConnected = false;
+          nearair_log("near air login faild!!!");
+        }
+               
+      }
+      break;
+    case CMD_HEAT_BEAT:
+      heart_beat_rec = true;
+      break;
+    case CMD_SENOR_DATA:
+      send_sensor_data(airContent);
+      break;
+    case CMD_RUN_STATUS:
+      send_nearair_status(airContent);
+      break;
+    case CMD_START:
+      send_nearair_start(airContent);
+      break;
+    case CMD_SHUTDOWN:
+      send_nearair_shutdown(airContent);
+      break;
+    case CMD_TO_SLEEP:
+      send_nearair_tosleep(airContent);
+      break;
+    case CMD_TO_SMART:
+      send_nearair_tosmart(airContent);
+      break;
+    case CMD_CHMOTOR_0:            
+    case CMD_CHMOTOR_1:
+    case CMD_CHMOTOR_2:
+    case CMD_CHMOTOR_3:
+    case CMD_CHMOTOR_4:
+    case CMD_CHMOTOR_5:
+      wifi_change_motor_gear(CMD_CMD,airContent);
+      break;
+    case CMD_CHILD_LOCK:
+    case CMD_CHILD_UNLOCK:                
+      wifi_childlock_lock(CMD_CMD,airContent);
+      break;
+        
+    
+  }
+  wifi_state_synchronization(airContent);
+//  *inBufLen = 0;
+exit:
+  return err;
+}
+
+OSStatus nearairc2sCommandProcess(uint8_t *inBuf, int inLen)
+{
+  mico_rtos_lock_mutex(&wifi_out_mutex);
+  nearair_log_trace();
+  OSStatus err = kNoErr;
+  mico_Context_t* inContext;
+  
+  struct sockaddr_t addr;
+
+  inContext = read_mico_Context();
+  if(inContext->appStatus.isRemoteConnected==true){
+    addr.s_ip = IPADDR_LOOPBACK;
+    addr.s_port = REMOTE_TCP_CLIENT_LOOPBACK_PORT;
+    sendto(_recved_nearair_loopback_fd, inBuf, inLen, 0, &addr, sizeof(addr));
+  }        
+  mico_rtos_unlock_mutex(&wifi_out_mutex);
+  return err;
+}
+
+OSStatus nearair_login(mico_Context_t * const inContext)
+{
+  nearair_log_trace();
+  OSStatus err = kUnknownErr;
+
+  md5_context *md5 = NULL;
+    nearair_cmd_head_t *head = NULL;
+    nearair_cmd_login_body_t *body = NULL;
+
+    char hextostr[33];
+    char *total_value = NULL;
+    char *md5input = NULL;
+    unsigned char md5output[16];
+    char *secretkey = SECRETKEY;//"qwertyuiop";//
+
+    head = ( nearair_cmd_head_t *)malloc(sizeof(nearair_cmd_head_t) );
+    require_action( head, exit, err = kNoMemoryErr );
+    memset(head, 0x0, sizeof(nearair_cmd_head_t));
+    
+    body = ( nearair_cmd_login_body_t *)malloc(sizeof(nearair_cmd_login_body_t) );
+    require_action( body, exit, err = kNoMemoryErr );
+    memset(body, 0x0, sizeof(nearair_cmd_login_body_t));
+    
+    total_value = (char *)malloc(63*sizeof(char));
+    require_action( total_value, exit, err = kNoMemoryErr );
+    memset(total_value, 0x0, sizeof(63*sizeof(char)));
+    
+    strcpy(head->len,"0042");
+    strcpy(head->time,getstringtime(time_count));
+    strcpy(head->cmd,"1001");
+    strcpy(head->ver,PROTOCOL_VERSION);
+		
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head->len);
+    strcat(total_value,head->time);
+    strcat(total_value,head->cmd);
+    strcat(total_value,head->ver);
+				
+    strcpy(body->sn,nearair_sn);		
+				
+    strcat(total_value,body->sn);
+    
+    md5input = malloc(30);
+    require_action( total_value, exit, err = kNoMemoryErr );
+    memset(md5input, 0x0, 30);    
+    
+    strcat(md5input,body->sn);
+    strcat(md5input,secretkey);
+    strcat(md5input,head->time);
+				
+    md5 = ( md5_context *)malloc(sizeof(md5_context) );
+    require_action( md5, exit, err = kNoMemoryErr );
+    memset(md5, 0x0, sizeof(md5_context));
+    
+    InitMd5(md5);
+    Md5Update(md5,(unsigned char *)md5input,strlen(md5input));
+    Md5Final(md5,md5output);	
+
+    hex2str(hextostr,(const unsigned char*)md5output,16);
+    hextostr[32] = '\0';
+    strcat(total_value,hextostr);	
+   
+    nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));		
+                		
+    nearair_log("have_sent_login_data:%s,strlen is:%d",total_value,strlen(total_value));
+		
+exit:
+    return err;
+}
+
+void heat_beat_handle(void *inContext)
+{
+  mico_Context_t *Context = inContext;
+  
+  nearair_cmd_head_t *head = NULL;
+  char *total_value = NULL;
+  char cmd[5];
+
+  memset(head, 0x0, sizeof(nearair_cmd_head_t));
+  
+  sprintf(cmd,"%4d",CMD_HEAT_BEAT);
+
+    if(false == heart_beat_rec)
+    {
+      nearair_log("heart beat display cloud connect faild!reconnect remoteTcpSever");      
+      heart_beat_rec = true;
+      Context->appStatus.isRemoteConnected = false;    
+//      nearair_login(inContext);
+    }
+    heart_beat_rec = false;
+    
+    strcpy(head->len,"0000");
+    strcpy(head->time,getstringtime(time_count));
+    strcpy(head->cmd,cmd);
+    strcpy(head->ver,PROTOCOL_VERSION);
+  
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head->len);
+    strcat(total_value,head->time);
+    strcat(total_value,head->cmd);
+    strcat(total_value,head->ver);
+
+    nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_heat_beat:%s,length is:%d!",total_value,strlen(total_value));
+
+}
+
+OSStatus wifi_send_nearair_sn(nearair_Context_t * const airContent)
+{
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t *head;
+    char *body_data = NULL;	
+    char *total_value = NULL;
+    char cmd[5];
+    
+    head = ( nearair_cmd_head_t *)malloc(sizeof(nearair_cmd_head_t) );
+    require_action( head, exit, err = kNoMemoryErr );
+    memset(head, 0x0, sizeof(nearair_cmd_head_t));
+  
+    body_data = malloc(21);
+    require_action( body_data, exit, err = kNoMemoryErr );
+    memset(body_data, 0x0, 21);
+    
+    total_value = malloc(41);
+    require_action( total_value, exit, err = kNoMemoryErr );
+    memset(total_value, 0x0, 41);
+    
+    sprintf(cmd,"%4d",CMD_SEND_SN);
+    strcpy(head->len,"0020");
+    strcpy(head->time,getstringtime(time_count));
+    strcpy(head->cmd,cmd);
+    strcpy(head->ver,PROTOCOL_VERSION);
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head->len);
+    strcat(total_value,head->time);
+    strcat(total_value,head->cmd);
+    strcat(total_value,head->ver);
+	
+    if(10 == strlen(airContent->flashNearAirInRam.extra_data))
+       strcpy(usr_id,airContent->flashNearAirInRam.extra_data);
+//    nearair_log("usr_id is:%s,extradata is:%s",usr_id,airContent->flashNearAirInRam.extra_data);
+    sprintf(body_data,"%s%s",usr_id,nearair_sn);
+    strcat(total_value,body_data);
+		
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+    nearair_log("have_sent_nearair_sn:%s,length is:%d!",total_value,strlen(total_value));        
+    
+exit:
+  if(head) free(head);
+  if(total_value) free(total_value);
+  if(body_data) free(body_data);
+    return err;	
+}
+
+OSStatus send_sensor_data(nearair_Context_t * const airContent)
+{
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t *head;
+    nearair_cmd_sensor_body_t *body;
+    char *body_data;
+    char *total_value;
+    char cmd[5];
+    
+    head = ( nearair_cmd_head_t *)malloc(sizeof(nearair_cmd_head_t) );
+    require_action( head, exit, err = kNoMemoryErr );
+    memset(head, 0x0, sizeof(nearair_cmd_head_t));
+    
+    body = ( nearair_cmd_sensor_body_t *)malloc(sizeof(nearair_cmd_sensor_body_t) );
+    require_action( body, exit, err = kNoMemoryErr );
+    memset(body, 0x0, sizeof(nearair_cmd_sensor_body_t));
+  
+    body_data = malloc(43);
+    require_action( body_data, exit, err = kNoMemoryErr );
+    memset(body_data, 0x0, 43);
+    
+    total_value = malloc(63);
+    require_action( total_value, exit, err = kNoMemoryErr );
+    memset(total_value, 0x0, 63);
+    
+    sprintf(cmd,"%4d",CMD_SENOR_DATA);
+    strcpy(head->len,"0042");
+    strcpy(head->time,getstringtime(time_count));
+    strcpy(head->cmd,cmd);
+    strcpy(head->ver,PROTOCOL_VERSION);
+
+    strcat(total_value,head->len);
+    strcat(total_value,head->time);
+    strcat(total_value,head->cmd);
+    strcat(total_value,head->ver);
+		
+    body->req_user = usr_id;
+    body->req_time = req_time;
+    body->sn = (char *)nearair_sn;//airContent->flashNearAirInRam.sn;
+    body->odour = airContent->sensorStatus.odour;
+    body->dust = airContent->sensorStatus.dust;
+    body->temperature = airContent->sensorStatus.temperature;
+    body->humidity = airContent->sensorStatus.humidity;
+    sprintf(body_data,"%s%s%s%04d%04d%02d%02d",body->req_user,body->req_time,body->sn
+            ,body->odour,body->dust,body->temperature,body->humidity);
+    nearair_log("s1:%s,s2:%s",total_value,body_data);
+    strcat(total_value,body_data);
+    
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+    nearair_log("have_sent_sensor_data:%s,length is:%d!",total_value,strlen(total_value));
+    
+exit:
+  if(head) free(head);
+  if(body) free(body);
+  if(total_value) free(total_value);
+  if(body_data) free(body_data);
+    return err;	
+}
+
+OSStatus send_nearair_status(nearair_Context_t * const airContent)
+{
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t head;
+    nearair_cmd_status_body_t body;
+    
+    char body_data[33];	
+    char total_value[54];
+    char cmd[5];
+    
+    sprintf(cmd,"%4d",CMD_RUN_STATUS);
+    strncpy(head.len,"0033",4);
+    head.len[4] = '\0';
+    strncpy(head.time,getstringtime(time_count),10);
+    head.time[10] = '\0';
+    strncpy(head.cmd,cmd,4);
+    head.cmd[4] = '\0';
+    strncpy(head.ver,PROTOCOL_VERSION,2);
+    head.ver[2] = '\0';
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head.len);
+    strcat(total_value,head.time);
+    strcat(total_value,head.cmd);
+    strcat(total_value,head.ver);
+	
+    body.req_user = usr_id;
+    body.req_time = req_time;
+    body.sn = (char *)nearair_sn;
+    body.mode = airContent->deviceStatus.mode;//get_nearair_mode();
+    body.position = airContent->deviceStatus.position;//read_motor_state();
+    body.child_lock = airContent->deviceStatus.child_lock;//read_button_state();
+    sprintf(body_data,"%s%s%s%1d%1d%1d",body.req_user,body.req_time,body.sn,body.mode,body.position,body.child_lock);
+    strcat(total_value,body_data);
+		
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_nearair_status:%s,length is:%d!",total_value,strlen(total_value));
+	
+    return err;	
+}
+
+OSStatus send_nearair_start(nearair_Context_t * const airContent)
+{ 
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t head;
+    nearair_cmd_return_body_t body;
+    char body_data[32];
+    char total_value[52];
+    char cmd[5];
+    
+    sprintf(cmd,"%4d",CMD_START);
+    strncpy(head.len,"0031",4);
+    head.len[4] = '\0';
+    strncpy(head.time,getstringtime(time_count),10);
+    head.time[10] = '\0';
+    strncpy(head.cmd,cmd,4);
+    head.cmd[4] = '\0';
+    strncpy(head.ver,PROTOCOL_VERSION,2);
+    head.ver[2] = '\0';
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head.len);
+    strcat(total_value,head.time);
+    strcat(total_value,head.cmd);
+    strcat(total_value,head.ver);
+	
+    body.req_user = usr_id;
+    body.req_time = req_time;
+    body.sn = (char *)nearair_sn;
+    airContent->powerStatus.power = POWER_ON;
+    
+    if(POWER_ON == airContent->powerStatus.power)
+    {
+      airContent->deviceStatus.mode = MODE_INIT;
+      airContent->deviceStatus.position = MOTOR_FLY;
+      body.ret = SUCCESS;
+    }
+    else
+      body.ret = ERROR;
+    sprintf(body_data,"%s%s%s%1d",body.req_user,body.req_time,body.sn,body.ret);
+    
+    strcat(total_value,body_data);
+	
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_nearair_start:%s,length is:%d!",total_value,strlen(total_value));
+		
+    return err;	
+}
+
+OSStatus send_nearair_shutdown(nearair_Context_t * const airContent)
+{ 
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t head;
+    nearair_cmd_return_body_t body;
+    char body_data[32];
+    char total_value[52];
+    char cmd[5];
+    
+    sprintf(cmd,"%4d",CMD_SHUTDOWN);
+    strncpy(head.len,"0031",4);
+    head.len[4] = '\0';
+    strncpy(head.time,getstringtime(time_count),10);
+    head.time[10] = '\0';
+    strncpy(head.cmd,cmd,4);
+    head.cmd[4] = '\0';
+    strncpy(head.ver,PROTOCOL_VERSION,2);
+    head.ver[2] = '\0';
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head.len);
+    strcat(total_value,head.time);
+    strcat(total_value,head.cmd);
+    strcat(total_value,head.ver);
+	
+    body.req_user = usr_id;
+    body.req_time = req_time;
+    body.sn = (char *)nearair_sn;
+    airContent->powerStatus.power = POWER_OFF;
+    if(POWER_OFF == airContent->powerStatus.power)
+    {
+      airContent->deviceStatus.mode = MODE_CLOSE;
+      airContent->deviceStatus.position = MOTOR_HALT;
+      body.ret = SUCCESS;
+    }
+    else
+      body.ret = ERROR;
+    sprintf(body_data,"%s%s%s%1d",body.req_user,body.req_time,body.sn,body.ret);
+    
+    strcat(total_value,body_data);
+	
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_nearair_shutdown:%s,length is:%d!",total_value,strlen(total_value));
+		
+    return err;	
+}
+
+OSStatus send_nearair_tosleep(nearair_Context_t * const airContent)
+{ 
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t head;
+    nearair_cmd_return_body_t body;
+    char body_data[32];
+    char total_value[52];
+    char cmd[5];
+    
+    sprintf(cmd,"%4d",CMD_TO_SLEEP);
+    strncpy(head.len,"0031",4);
+    head.len[4] = '\0';
+    strncpy(head.time,getstringtime(time_count),10);
+    head.time[10] = '\0';
+    strncpy(head.cmd,cmd,4);
+    head.cmd[4] = '\0';
+    strncpy(head.ver,PROTOCOL_VERSION,2);
+    head.ver[2] = '\0';
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head.len);
+    strcat(total_value,head.time);
+    strcat(total_value,head.cmd);
+    strcat(total_value,head.ver);
+	
+    body.req_user = usr_id;
+    body.req_time = req_time;
+    body.sn = (char *)nearair_sn;
+    airContent->deviceStatus.mode = AIR_SLEEP;
+    if(AIR_SLEEP == airContent->deviceStatus.mode)
+    {
+      airContent->deviceStatus.position = MOTOR_SLEEP;
+      body.ret = SUCCESS;
+    }
+    else
+      body.ret = ERROR;
+    sprintf(body_data,"%s%s%s%1d",body.req_user,body.req_time,body.sn,body.ret);
+    
+    strcat(total_value,body_data);
+	
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_nearair_tosleep:%s,length is:%d!",total_value,strlen(total_value));
+		
+    return err;	
+}
+
+OSStatus send_nearair_tosmart(nearair_Context_t * const airContent)
+{ 
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t head;
+    nearair_cmd_return_body_t body;
+    char body_data[32];
+    char total_value[52];
+    char cmd[5];
+    
+    sprintf(cmd,"%4d",CMD_TO_SMART);
+    strncpy(head.len,"0031",4);
+    head.len[4] = '\0';
+    strncpy(head.time,getstringtime(time_count),10);
+    head.time[10] = '\0';
+    strncpy(head.cmd,cmd,4);
+    head.cmd[4] = '\0';
+    strncpy(head.ver,PROTOCOL_VERSION,2);
+    head.ver[2] = '\0';
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head.len);
+    strcat(total_value,head.time);
+    strcat(total_value,head.cmd);
+    strcat(total_value,head.ver);
+	
+    body.req_user = usr_id;
+    body.req_time = req_time;
+    body.sn = (char *)nearair_sn;
+    airContent->deviceStatus.mode = AIR_SMART;
+    if(AIR_SMART == airContent->deviceStatus.mode)
+      body.ret = SUCCESS;
+    else
+      body.ret = ERROR;
+    sprintf(body_data,"%s%s%s%1d",body.req_user,body.req_time,body.sn,body.ret);
+    
+    strcat(total_value,body_data);
+	
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_nearair_tosmart:%s,length is:%d!",total_value,strlen(total_value));
+		
+    return err;	
+}
+
+OSStatus send_nearair_log(nearair_Context_t * const airContent)
+{ 
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t head;
+    nearair_cmd_log_body_t body;
+    char body_data[26];
+    char total_value[46];
+    char cmd[5];
+    
+    sprintf(cmd,"%4d",CMD_LOG_DATA);
+    strncpy(head.len,"0025",4);
+    head.len[4] = '\0';
+    strncpy(head.time,getstringtime(time_count),10);
+    head.time[10] = '\0';
+    strncpy(head.cmd,cmd,4);
+    head.cmd[4] = '\0';
+    strncpy(head.ver,PROTOCOL_VERSION,2);
+    head.ver[2] = '\0';
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head.len);
+    strcat(total_value,head.time);
+    strcat(total_value,head.cmd);
+    strcat(total_value,head.ver);
+	
+    body.sn = (char *)nearair_sn;
+    body.odour = airContent->sensorStatus.odour;
+    body.dust = airContent->sensorStatus.dust;
+    body.temperature = airContent->sensorStatus.temperature;
+    body.humidity = airContent->sensorStatus.humidity;
+    body.mode = airContent->deviceStatus.mode;
+    body.position = airContent->deviceStatus.position;
+    body.child_lock = airContent->deviceStatus.child_lock;
+    sprintf(body_data,"%s%04d%04d%02d%02d%1d%1d%1d",body.sn,body.odour,body.dust,
+            body.temperature,body.humidity,body.mode,body.position,body.child_lock);
+    strcat(total_value,body_data);
+	
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_nearair_log:%s,length is:%d!",total_value,strlen(total_value));
+		
+    return err;	
+}
+
+OSStatus wifi_change_motor_gear(uint16_t cmd_motor,nearair_Context_t * const airContent)
+{ 
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t head;
+    nearair_cmd_return_body_t body;
+    char body_data[32];
+    char total_value[52];
+    char cmd[5];
+    
+    sprintf(cmd,"%4d",cmd_motor);
+    strncpy(head.len,"0031",4);
+    head.len[4] = '\0';
+    strncpy(head.time,getstringtime(time_count),10);
+    head.time[10] = '\0';
+    strncpy(head.cmd,cmd,4);
+    head.cmd[4] = '\0';
+    strncpy(head.ver,PROTOCOL_VERSION,2);
+    head.ver[2] = '\0';
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head.len);
+    strcat(total_value,head.time);
+    strcat(total_value,head.cmd);
+    strcat(total_value,head.ver);
+	
+    body.req_user = usr_id;
+    body.req_time = req_time;
+    body.sn = (char *)nearair_sn;
+    switch(cmd_motor)
+    {
+    case CMD_CHMOTOR_0:
+      {
+        airContent->deviceStatus.position = MOTOR_HALT;
+        if(MOTOR_HALT == airContent->deviceStatus.position)
+          body.ret = SUCCESS;
+        else
+          body.ret = ERROR;
+      }
+      break;
+    case CMD_CHMOTOR_1:
+      {
+        airContent->deviceStatus.position = MOTOR_SLEEP;
+        if(MOTOR_SLEEP == airContent->deviceStatus.position)
+          body.ret = SUCCESS;
+        else
+          body.ret = ERROR;
+      }
+      break;
+    case CMD_CHMOTOR_2:
+      {
+        airContent->deviceStatus.position = MOTOR_LOW;
+        if(MOTOR_LOW == airContent->deviceStatus.position)
+          body.ret = SUCCESS;
+        else
+          body.ret = ERROR;
+      }
+      break;
+    case CMD_CHMOTOR_3:
+      {
+        airContent->deviceStatus.position = MOTOR_MIDIUM;
+        if(MOTOR_MIDIUM == airContent->deviceStatus.position)
+          body.ret = SUCCESS;
+        else
+          body.ret = ERROR;
+      }
+      break;
+    case CMD_CHMOTOR_4:
+      {
+        airContent->deviceStatus.position = MOTOR_HIGH;
+        if(MOTOR_HIGH == airContent->deviceStatus.position)
+          body.ret = SUCCESS;
+        else
+          body.ret = ERROR;
+      }
+      break;
+    case CMD_CHMOTOR_5:
+      {
+        airContent->deviceStatus.position = MOTOR_FLY;
+        if(MOTOR_FLY == airContent->deviceStatus.position)
+          body.ret = SUCCESS;
+        else
+          body.ret = ERROR;
+      }
+      break;
+    default:
+      body.ret = ERROR;
+      break;
+    }
+    sprintf(body_data,"%s%s%s%1d",body.req_user,body.req_time,body.sn,body.ret);
+    strcat(total_value,body_data);
+	
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_nearair_motor_gear[%d]:%s,length is:%d!",airContent->deviceStatus.position,
+                total_value,strlen(total_value));
+		
+    return err;	
+}
+
+OSStatus wifi_childlock_lock(uint16_t cmd_childlock,nearair_Context_t * const airContent)
+{ 
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t head;
+    nearair_cmd_return_body_t body;
+    char body_data[32];
+    char total_value[52];
+    char cmd[5];
+    
+    sprintf(cmd,"%4d",cmd_childlock);
+    strncpy(head.len,"0031",4);
+    head.len[4] = '\0';
+    strncpy(head.time,getstringtime(time_count),10);
+    head.time[10] = '\0';
+    strncpy(head.cmd,cmd,4);
+    head.cmd[4] = '\0';
+    strncpy(head.ver,PROTOCOL_VERSION,2);
+    head.ver[2] = '\0';
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head.len);
+    strcat(total_value,head.time);
+    strcat(total_value,head.cmd);
+    strcat(total_value,head.ver);
+	
+    body.req_user = usr_id;
+    body.req_time = req_time;
+    body.sn = (char *)nearair_sn;
+    switch(cmd_childlock)
+    {
+    case CMD_CHILD_LOCK:
+      {
+        airContent->deviceStatus.child_lock = CHILDLOCK_LOCK;
+        if(CHILDLOCK_LOCK == airContent->deviceStatus.child_lock)
+          body.ret = SUCCESS;
+        else
+          body.ret = ERROR;       
+      }
+      break;
+    case CMD_CHILD_UNLOCK:
+      {
+        airContent->deviceStatus.child_lock = CHILDLOCK_UNLOCK;
+        if(CHILDLOCK_UNLOCK == airContent->deviceStatus.child_lock)
+          body.ret = SUCCESS;
+        else
+          body.ret = ERROR; 
+      }
+      break;
+    default:
+      body.ret = ERROR;
+      break;
+    }
+    
+    sprintf(body_data,"%s%s%s%1d",body.req_user,body.req_time,body.sn,body.ret);
+    
+    strcat(total_value,body_data);
+	
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_nearair_childlock[%d]:%s,length is:%d!",airContent->deviceStatus.child_lock,
+                total_value,strlen(total_value));
+		
+    return err;	
+}
+
+OSStatus wifi_state_synchronization(nearair_Context_t * const airContent)
+{ 
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t head;
+    nearair_cmd_state_synchronization_body body;
+    char body_data[13+1];
+    char total_value[33+1];
+    char cmd[4+1];
+    
+    sprintf(cmd,"%4d",CMD_STATE_SYNCHRONIZATION);
+    strncpy(head.len,"0013",4);
+    head.len[4] = '\0';
+    strncpy(head.time,getstringtime(time_count),10);
+    head.time[10] = '\0';
+    strncpy(head.cmd,cmd,4);
+    head.cmd[4] = '\0';
+    strncpy(head.ver,PROTOCOL_VERSION,2);
+    head.ver[2] = '\0';
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head.len);
+    strcat(total_value,head.time);
+    strcat(total_value,head.cmd);
+    strcat(total_value,head.ver);
+	
+    body.sn = (char *)nearair_sn;
+    body.mode = airContent->deviceStatus.mode;
+    body.position = airContent->deviceStatus.position;
+    body.child_lock = airContent->deviceStatus.child_lock;
+    
+    sprintf(body_data,"%s%1d%1d%1d",body.sn,body.mode,body.position,body.child_lock);
+    strcat(total_value,body_data);
+	
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_nearair_state_synchronization:%s,length is:%d!",total_value,strlen(total_value));
+	
+    wifi_sensor_synchronization(airContent);
+    return err;	
+}
+OSStatus wifi_sensor_synchronization(nearair_Context_t * const airContent)
+{ 
+    nearair_log_trace();
+    OSStatus err = kUnknownErr;
+    
+    nearair_cmd_head_t head;
+    nearair_cmd_sensor_synchronization_body body;
+    char body_data[22+1];
+    char total_value[42+1];
+    char cmd[4+1];
+    
+    sprintf(cmd,"%4d",CMD_SENSOR_SYNCHRONIZATION);
+    strncpy(head.len,"0022",4);
+    head.len[4] = '\0';
+    strncpy(head.time,getstringtime(time_count),10);
+    head.time[10] = '\0';
+    strncpy(head.cmd,cmd,4);
+    head.cmd[4] = '\0';
+    strncpy(head.ver,PROTOCOL_VERSION,2);
+    head.ver[2] = '\0';
+
+    memset(total_value,0,sizeof(total_value));
+    strcat(total_value,head.len);
+    strcat(total_value,head.time);
+    strcat(total_value,head.cmd);
+    strcat(total_value,head.ver);
+	
+    body.sn = (char *)nearair_sn;
+    body.odour = airContent->sensorStatus.odour;
+    body.dust = airContent->sensorStatus.dust;
+    body.temperature = airContent->sensorStatus.temperature;
+    body.humidity = airContent->sensorStatus.humidity;
+    
+    sprintf(body_data,"%s%04d%04d%02d%02d",body.sn,body.odour,body.dust,
+            body.temperature,body.humidity);
+    strcat(total_value,body_data);
+	
+    err = nearairc2sCommandProcess((unsigned char *)total_value,strlen(total_value));
+
+    nearair_log("have_sent_nearair_sensor_synchronization:%s,length is:%d!",total_value,strlen(total_value));
+		
+    return err;	
+}
+
+int hex2str(char *sDest,const unsigned char *sSrc,int nSrclen)
+{
+    int i;
+    char szTmp[3];
+    for(i=0;i<nSrclen;i++)
+    {
+            sprintf(szTmp,"%02x",sSrc[i]);
+            memcpy(&sDest[i*2],szTmp,2);
+    }
+    return 0;
+}
