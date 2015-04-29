@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<userOverrides>
+  <override>
+    <path>D:\working\MICO-1.3.0\Demos\NEARAIR\stringtool.c</path>
+    <encoding>System</encoding>
+  </override>
+  <override>
+    <path>D:\working\MICO-1.3.0\NearAir_Bsp\bsp_adc.c</path>
+    <encoding>System</encoding>
+  </override>
+  <override>
+    <path>D:\working\MICO-1.3.0\NearAir_Bsp\bsp_beep.c</path>
+    <encoding>System</encoding>
+  </override>
+  <override>
+    <path>D:\working\MICO-1.3.0\NearAir_Bsp\bsp_buzzer.h</path>
+    <encoding>System</encoding>
+  </override>
+  <override>
+    <path>D:\working\MICO-1.3.0\NearAir_Bsp\bsp_led.c</path>
+    <encoding>System</encoding>
+  </override>
+  <override>
+    <path>D:\working\MICO-1.3.0\NearAir_Bsp\test2.c</path>
+    <encoding>System</encoding>
+  </override>
+</userOverrides>
+
+

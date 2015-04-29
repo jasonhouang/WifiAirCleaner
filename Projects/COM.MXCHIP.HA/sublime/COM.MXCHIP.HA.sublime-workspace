@@ -1,0 +1,1242 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"ser",
+				"server_log(M, ...)	macro"
+			],
+			[
+				"ha",
+				"ha_log(M, ...)	macro"
+			],
+			[
+				"cm",
+				"cmdLen	uint16_t"
+			],
+			[
+				"require_ac",
+				"require_action_quiet(X, LABEL, ACTION)	macro"
+			],
+			[
+				"kc",
+				"kConnectionErr	macro"
+			],
+			[
+				"Socket",
+				"SocketClose(int *fd)	void"
+			],
+			[
+				"kNo",
+				"kNoMemoryErr	macro"
+			],
+			[
+				"req",
+				"require(X, LABEL)	macro"
+			],
+			[
+				"ma",
+				"malloc(size_t)	void *"
+			],
+			[
+				"SO",
+				"SO_RCVTIMEO	SOCK_OPT_VAL"
+			],
+			[
+				"SO_",
+				"SO_SNDTIMEO	SOCK_OPT_VAL"
+			],
+			[
+				"RE",
+				"REMOTE_TCP_CLIENT_LOOPBACK_PORT	macro"
+			],
+			[
+				"re",
+				"remoteTcpClient_loopBack_fd	int"
+			],
+			[
+				"uint",
+				"uint16_t	typedef"
+			],
+			[
+				"_us",
+				"_uart_send_mutex	mico_mutex_t"
+			],
+			[
+				"requi",
+				"require(X, LABEL)	macro"
+			],
+			[
+				"_uart",
+				"_uart_send_mutex	mico_mutex_t"
+			],
+			[
+				"mico_rtos_init_s",
+				"mico_rtos_init_semaphore(mico_semaphore_t *semaphore, int count)	MxchipStatus"
+			],
+			[
+				"MICO",
+				"MICO_NO_WAIT	macro"
+			],
+			[
+				"mico_rtosge",
+				"mico_rtos_get_semaphore(mico_semaphore_t *semaphore, unsigned int timeout_ms)	MxchipStatus"
+			],
+			[
+				"mico_rtos_in",
+				"mico_rtos_create_thread(mico_thread_t *thread, uint8_t priority, const char *name, mico_thread_function_t function, unsigned int stack_size, void *arg)	MxchipStatus"
+			],
+			[
+				"MICO_",
+				"MICO_NEVER_TIMEOUT	macro"
+			],
+			[
+				"eState_",
+				"eState_Wlan_Powerdown	SYS_State_t"
+			],
+			[
+				"plat",
+				"PlatformUartIn"
+			],
+			[
+				"memc",
+				"memcmp(const void *, const void *, size_t)	int"
+			],
+			[
+				"m",
+				"mcuPowerSaveEnable	bool"
+			],
+			[
+				"mico",
+				"mico_get_time()	uint32_t"
+			],
+			[
+				"mico_rtos",
+				"mico_rtos_init_mutex(mico_mutex_t *mutex)	MxchipStatus"
+			],
+			[
+				"mico_t",
+				"mico_mutex_t	typedef"
+			],
+			[
+				"mico_rt",
+				"mico_rtos_set_semaphore(mico_semaphore_t *semaphore)	MxchipStatus"
+			],
+			[
+				"DE",
+				"DEAFULT_REMOTE_SERVER	macro"
+			],
+			[
+				"fl",
+				"flashContentInRam	flash_content_t"
+			],
+			[
+				"lo",
+				"localTcpClient_fd	int *"
+			],
+			[
+				"PlatformFlash",
+				"PlatformFlashWrite(volatile uint32_t *FlashAddress, uint32_t *Data, uint32_t DataLength)	OSStatus"
+			],
+			[
+				"Platformf",
+				"PlatformFlashInitialize()	OSStatus"
+			],
+			[
+				"kun",
+				"kUnknownErr	macro"
+			],
+			[
+				"uin",
+				"uint32_t	typedef"
+			],
+			[
+				"kC",
+				"kChecksumErr	macro"
+			],
+			[
+				"f",
+				"flashContentInRam	flash_content_t"
+			],
+			[
+				"c",
+				"context	mico_Context_t *"
+			],
+			[
+				"fla",
+				"flashContentInRam	flash_content_t"
+			],
+			[
+				"mico_l",
+				"mico_log(M, ...)	macro"
+			],
+			[
+				"Button_STANDBY_",
+				"Button_STANDBY_PIN	macro"
+			],
+			[
+				"GPIO_Read",
+				"GPIO_ReadInputDataBit(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)	uint8_t"
+			],
+			[
+				"easylink",
+				"easylinkClient_fd	int"
+			],
+			[
+				"mico_rtos_set",
+				"mico_rtos_set_semaphore(mico_semaphore_t *semaphore)	MxchipStatus"
+			],
+			[
+				"es",
+				"eState_Software_Reset	SYS_State_t"
+			],
+			[
+				"mico_rtos_init_",
+				"mico_rtos_init_semaphore(mico_semaphore_t *semaphore, int count)	MxchipStatus"
+			],
+			[
+				"mico_s",
+				"mico_semaphore_t	typedef"
+			],
+			[
+				"e",
+				"easyLinkSkip	bool"
+			],
+			[
+				"require_noerr",
+				"require_noerr_action(ERR, LABEL, ACTION)	macro"
+			],
+			[
+				"DH",
+				"DHCP_Client	DHCPOperationMode"
+			],
+			[
+				"wla",
+				"wLanUnConfigured	config_type"
+			],
+			[
+				"kn",
+				"kNoErr	macro"
+			],
+			[
+				"requ",
+				"require(X, LABEL)	macro"
+			],
+			[
+				"DHC",
+				"DHCP_Disable	DHCPOperationMode"
+			],
+			[
+				"l",
+				"localIp	char [16]"
+			],
+			[
+				"ip",
+				"local_ip_addr	char [16]"
+			],
+			[
+				"int",
+				"int32_t	typedef"
+			],
+			[
+				"d",
+				"dhcpEnable	bool"
+			],
+			[
+				"n",
+				"netMask	char [16]"
+			],
+			[
+				"inet",
+				"inet_ntoa(char *s, unsigned int x)	char *"
+			],
+			[
+				"a",
+				"allConfigured	config_type"
+			],
+			[
+				"Clos",
+				"CloseEasylink2()	int"
+			],
+			[
+				"mico_notify_WIFI_S",
+				"mico_notify_WIFI_STATUS_CHANGED	mico_notify_types_t"
+			],
+			[
+				"k",
+				"keyLength	int"
+			],
+			[
+				"b",
+				"bssid	char [6]"
+			],
+			[
+				"us",
+				"user_key	char [64]"
+			],
+			[
+				"u",
+				"user_key	char [64]"
+			],
+			[
+				"key",
+				"key_len	int"
+			],
+			[
+				"s",
+				"security	SECURITY_TYPE_E"
+			],
+			[
+				"ke",
+				"key_len	int"
+			],
+			[
+				"MX",
+				"MXCHIP_SUCCESS	MxchipStatus"
+			],
+			[
+				"require_",
+				"require_action(X, LABEL, ACTION)	macro"
+			],
+			[
+				"strn",
+				"strncpy(char *restrict, const char *restrict, size_t)	char *"
+			],
+			[
+				"kUn",
+				"kUnknownErr	macro"
+			],
+			[
+				"__str",
+				"__strdup_trans_dot(char *src)	char *"
+			],
+			[
+				"p",
+				"protocol	char [32]"
+			],
+			[
+				"temp",
+				"temp2	WiFi_Status_Notify *"
+			],
+			[
+				"kOper",
+				"kNotPreparedErr	macro"
+			],
+			[
+				"mico_rtos_i",
+				"mico_rtos_init_mutex(mico_mutex_t *mutex)	MxchipStatus"
+			],
+			[
+				"kU",
+				"kUnknownErr	macro"
+			],
+			[
+				"in",
+				"inContext"
+			],
+			[
+				"send",
+				"send(int sockfd, const void *buf, unsigned int len, int flags)	int"
+			],
+			[
+				"mico_rtos_ge",
+				"mico_rtos_get_semaphore(mico_semaphore_t *semaphore, unsigned int timeout_ms)	MxchipStatus"
+			],
+			[
+				"t",
+				"txt_att	char *"
+			],
+			[
+				"MF",
+				"MFi_SERVICE_MFi	macro"
+			],
+			[
+				"mico_rtos_de",
+				"mico_rtos_delete_thread(mico_thread_t *thread)	MxchipStatus"
+			],
+			[
+				"mico_re",
+				"mico_rtos_init_mutex(mico_mutex_t *mutex)	MxchipStatus"
+			],
+			[
+				"E",
+				"ENABLE	FunctionalState"
+			],
+			[
+				"ea",
+				"eaBundleSeedID	char *"
+			],
+			[
+				"support",
+				"supports5GHzWiFi	bool"
+			],
+			[
+				"supportsAirp",
+				"supportsAirPrint	bool"
+			],
+			[
+				"w",
+				"supportsWakeOnWireless	bool"
+			],
+			[
+				"wi",
+				"wifi_key	char [32]"
+			],
+			[
+				"WAC_N",
+				"WAC_NetConfig	network_InitTypeDef_st *"
+			],
+			[
+				"de",
+				"destinationSSID	char*"
+			],
+			[
+				"page",
+				"pagesNumber	uint8_t"
+			],
+			[
+				"CP_",
+				"CP_I2C_RETRY_TIMES	macro"
+			],
+			[
+				"WAC",
+				"WAC_OUI_default	const uint8_t[]"
+			],
+			[
+				"OUI",
+				"OUI	uint8_t *"
+			],
+			[
+				"El",
+				"ElementsLength	uint16_t"
+			],
+			[
+				"su",
+				"Support_AirPrint	uint8_t"
+			],
+			[
+				"ui",
+				"uint8_t	typedef"
+			],
+			[
+				"sto",
+				"stopBits	const int [3]"
+			],
+			[
+				"uart",
+				"uartParam	UartParam_t"
+			],
+			[
+				"USART_HardwareFlowControl_",
+				"USART_HardwareFlowControl_RTS_CTS	macro"
+			],
+			[
+				"USART_StopBits_",
+				"USART_StopBits_1_5	macro"
+			],
+			[
+				"H",
+				"HIGH	enum _DL_GPIO_STATE_"
+			],
+			[
+				"GPIO_Mode_",
+				"GPIO_Mode_IN	GPIOMode_TypeDef"
+			],
+			[
+				"DL_PULL_",
+				"DL_PULL_DOWN	enum _DL_GPIO_PULL_"
+			],
+			[
+				"DL_PULL",
+				"DL_PULL_NONE	enum _DL_GPIO_PULL_"
+			],
+			[
+				"GPIO_",
+				"GPIO_PORT	GPIO_TypeDef *"
+			],
+			[
+				"mx",
+				"mxEnable	enum <anonymous>"
+			],
+			[
+				"ps",
+				"ps_disable()	void"
+			],
+			[
+				"STA",
+				"STA_MODE	enum _NETWORK_INTERFACE_"
+			],
+			[
+				"clou",
+				"cloud_connected	unsigned int"
+			],
+			[
+				"soc",
+				"socket_fd	int"
+			],
+			[
+				"UAP",
+				"UAP_START	enum <anonymous>"
+			],
+			[
+				"FD",
+				"FD_SET	macro"
+			],
+			[
+				"mxch",
+				"mxchipTick()	void"
+			],
+			[
+				"STAT",
+				"Station	WiFi_Interface"
+			],
+			[
+				"uap_",
+				"uap_key	char [32]"
+			],
+			[
+				"def",
+				"device_info	mxchipWNet_HA_st  *"
+			],
+			[
+				"MS",
+				"MS_TIMER	vu32"
+			],
+			[
+				"st",
+				"status	current_state_t"
+			],
+			[
+				"running",
+				"running_state	unsigned int"
+			],
+			[
+				"wN",
+				"wNetConfig	network_InitTypeDef_st"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "COM.MXCHIP.HA.sublime-project",
+			"settings":
+			{
+				"buffer_size": 1247,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/LocalTcpServer.c",
+			"settings":
+			{
+				"buffer_size": 4611,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 142 files for \"localServerPort\"\n\n/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/LocalTcpServer.c:\n   37    require_action(IsValidSocket( localTcpListener_fd ), exit, err = kNoResourcesErr );\n   38    addr.s_ip = INADDR_ANY;\n   39:   addr.s_port = Context->flashContentInRam.appConfig.localServerPort;\n   40    err = bind(localTcpListener_fd, &addr, sizeof(addr));\n   41    require_noerr( err, exit );\n   ..\n   44    require_noerr( err, exit );\n   45  \n   46:   server_log(\"Server established at port: %d, fd: %d\", Context->flashContentInRam.appConfig.localServerPort, localTcpListener_fd);\n   47  \n   48    FD_ZERO(&readfds);\n\n/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/MICOAppDefine.h:\n   47  {\n   48    uint32_t          configDataVer;\n   49:   uint32_t          localServerPort;\n   50  \n   51    /*local services*/\n\n/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/MICOAppEntrance.c:\n   19  {\n   20    inContext->flashContentInRam.appConfig.configDataVer = CONFIGURATION_VERSION;\n   21:   inContext->flashContentInRam.appConfig.localServerPort = LOCAL_PORT;\n   22    inContext->flashContentInRam.appConfig.localServerEnable = true;\n   23    inContext->flashContentInRam.appConfig.USART_BaudRate = 115200;\n\n/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/MICOBonjour.c:\n   81    init.instance_name = (char*)__strdup(temp_txt);\n   82  \n   83:   init.service_port = inContext->flashContentInRam.appConfig.localServerPort;\n   84    init.interface = interface;\n   85  \n\n5 matches across 4 files\n",
+			"settings":
+			{
+				"buffer_size": 1600,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/MICOAppEntrance.c",
+			"settings":
+			{
+				"buffer_size": 2238,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/MICOAppDefine.h",
+			"settings":
+			{
+				"buffer_size": 2051,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/UartRecv.c",
+			"settings":
+			{
+				"buffer_size": 1697,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/HaProtocol.c",
+			"settings":
+			{
+				"buffer_size": 10826,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 287.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Package Control: Install Package"
+			],
+			[
+				"v",
+				"View: Toggle Side Bar"
+			],
+			[
+				"Cscope:Look up symbol",
+				"Cscope: Look up symbol"
+			],
+			[
+				":",
+				"View: Toggle Tabs"
+			],
+			[
+				":q",
+				"Set Syntax: SQL"
+			],
+			[
+				"Package Control: install		",
+				"Package Control: Install Package"
+			],
+			[
+				"Snippet: ",
+				"Snippet: Lorem ipsum"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/User_EasyLink.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Projects/Demo4_COM.MXCHIP.HA/sublime/mxchipWNet_HA.sublime-project",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Projects/Demo2_COM.MXCHIP.SPP/sublime/COM.MXCHIP.SPP.sublime-project",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/UartRecv.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/mico_app_main.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/mico_app_define.h",
+		"/Users/william/Develop/Clang_lib/ARMCC/include/string.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/HTTPUtils.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/SocketUtils.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/HaProtocol.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/RemoteTcpClient.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/LocalTcpServer.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/Support/Common.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/HaProtocol.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/Support/SocketUtils.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/mxchipWNET.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/SocketUtils.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/Debug.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/mxchipWNet.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Platform/platform.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/User_EasyLink.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Platform/PlatformUart.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/MICO/mico_define.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/MICO/mico_main.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/mico_callback.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/remoteTcpClient.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/MICO/mico_define.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/mico_app_define.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/stm32f2xx_dma.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/haProtocol.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Platform/PlatformUart.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/haProtocol.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/MICO/EasyLink.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/MICO/mico_flash_configuration.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/RingBufferUtils.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/RingBufferUtils.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/localTcpServer.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Platform/HAL_EMW3162.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/mdns.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/user_EasyLink.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/encrypt.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/haCommand.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/haCommand.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/stm32f2xx_flash.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Platform/PlatformFlash.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Platform/PlatformFlash.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/HTTPUtils.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Platform/HAL_EABox.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Platform/hal_misc.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/philipsled/mico_app_main.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/philipsled/mico_app_define.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/MICO/Bonjour.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/mico_rtos.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Projects/Demo4_mxchipWNet_HA/sublime/mxchipWNet_HA.sublime-project",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/mico_app_main",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/Bonjour.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/mxchipWNet-HA.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/mxchipWNet-HA.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/stm32f2xx_pwr.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/HAL/platform.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/Common.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/mico_callback.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/EasyLink.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/HAL/platform.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/EasyLink.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/src/stm32f2xx_pwr.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/HAL/hal_misc.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/stm32f2xx_exti.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/HAL/HAL_EMW3162.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/HAL/flash_if.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/Support/debug.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/HAL/flash_if.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/HAL/flash_if.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/LocalControllerService.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/Support/HTTPUtils.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/mico_callback.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/StringUtils.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/HAL/PlatformWDG.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/mico_config.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo1_WiFi_Link/main.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/stm32f2xx_iwdg.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/HAL/PlatformWDG.h",
+		"/Users/William/Library/Application Support/Sublime Text 2/Packages/User/Git.sublime-settings",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/.git/config",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/Support/StringUtils.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/external/JSON-C/json_tokener.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/external/JSON-C/json_object.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/user_EasyLink.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/external/JSON-C/json_object.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/external/JSON-C/json_object.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/external/JSON-C/json_tokener.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/external/JSON-C/json_object_private.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/StringUtils.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/stm32f2xx_usart.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/stm32f2xx_tim.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/src/stm32f2xx_tim.c",
+		"/Users/William/Develop/mxchipWNet Demo@EMW316x/Demos/Demox_mxchipWNet_HA/mxchipWNet_HA.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/HAL/uart.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/stm32f2xx_rcc.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/system_stm32f2xx.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/HAL/platform.h",
+		"/Users/William/Develop/mxchipWNet Demo@EMW316x/Demos/Demox_mxchipWNet_HA/main.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo3_WPS_EasyLink/main.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo2_TCP_IP_Stack/TCP_Server_Test.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/HAL/platform_EMW2162.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/stm32f2xx_gpio.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/support/mdns.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/Bonjour.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/MFi_WAC/mdns.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/MFi_WAC/MFi_WAC.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/Support/common.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/mico_rtos.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/mico_callbacl.h",
+		"/Users/William/Develop/release/mxchipWNet Pro Demo@EMW316x/HAL/platform.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/inc/stm32f2xx.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo4_mxchipWNet_HA/stm32f2xx_it.c",
+		"/Users/William/Develop/EMW-PROJECT/EMW316x_COMMON_BOOT/EMW_BOOT/src/main.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/MFi_WAC/MFi-SAP.c",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/STM32F2xx_StdPeriph_Driver/CMSIS/core_cmFunc.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/external/JSON-C/arraylist.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/Support/Debug.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Library/external/JSON-C/config.h",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/MFi_WAC/HTTPUtils.h",
+		"/Users/william/Develop/Clang_lib/ARMCC/include/stdlib.h",
+		"/Users/William/Library/Application Support/Sublime Text 2/Packages/SublimeClang/clang/include/stddef.h",
+		"/Users/William/Develop/mxchipWNet Demo@EMW316x/Demos/Demo3_WPS_EasyLink/menu.c",
+		"/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Library/mxchipWNET.h",
+		"/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/Demo2_TCP_IP_Stack/TCP_Client_Test_debug.c"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"<open folders>",
+			"",
+			"<open folders>",
+			"/Users/william/Develop/E-DICE",
+			"",
+			"<open folders>",
+			"/Volumes/C/develop/MDV-STM32-407/EMB_STM32_407_wifi_lib_V2.0.0/",
+			"/Volumes/C/develop/MDV-STM32-407/EMB_STM32_407_wifi_lib_V2.0.0/Project/复件 Data_Send&Recv",
+			"/Volumes/C/develop/MDV-STM32-407/EMB_STM32_407_wifi_lib_V2.0.0/Project/STM32F4xx_StdPeriph_Examples"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"localServerPort",
+			"check_sum",
+			"readfds",
+			";\n",
+			"haWlanCommandProcess",
+			"len",
+			"localTcpServer_loopBack_fd",
+			");\n",
+			"exit",
+			"_get_status",
+			"platform_uart_receive_bytes",
+			"remote",
+			"_mutex",
+			"check_sum",
+			"check_sm",
+			"check_sum",
+			"hal_uart_get_one_packet",
+			"Continue",
+			"update",
+			"flashContentInRam_mutex",
+			"set_network_state",
+			"tx_complete",
+			"uart_wakeup_thread",
+			"Rx_irq_handler",
+			"RX_BUFFER_SIZE",
+			"ring_buffer_used_space",
+			"platform_uart_receive_bytes",
+			"_wifiConnected_mutex",
+			"easylink_thread",
+			"mico_notify_EASYLINK_COMPLETE_function",
+			"mico_notify_EASYLINK_COMPLETED",
+			"EasyLinkNotify_EasyLinkCompleteHandler",
+			"easylink_thread",
+			"easylink_sem",
+			"md5",
+			"mutex",
+			"REMOTE_CONNECT",
+			"_check_sum",
+			"set_network_state",
+			"minFd",
+			"Platform_Debug_UART_Init\n",
+			"Platform_Debug_UART_Init\nPlatform_Debug_UART_Init",
+			"Platform_Debug_UART_Init",
+			"HTTPGetHeaderField",
+			"HTTPGetHeaderField∫\nHTTPGetHeaderField∫",
+			"HTTPGetHeaderField",
+			"_PlatformFlashGetWriteProtectionStatus",
+			"FLASH_COMPLETE",
+			"wdgOutCallback",
+			"GetSector",
+			"report_timer_handler",
+			"_report_timer",
+			"ha",
+			"stopEasyLink",
+			"mfi_bonjour_remove_record",
+			"_button_EL_timer",
+			"PWR_ClearFlag",
+			"easylinkServerIP",
+			"mfi_bonjour_remove_record",
+			"suspend_bonjour_service",
+			"easylinkClient_fd",
+			"stopEasyLink",
+			"easylinkClient_fd",
+			"stopEasyLink",
+			"easyLink_fd",
+			"reboot",
+			"mfi_bonjour_remove_record",
+			"fd_client",
+			"threadexit",
+			"easylink_sem",
+			"HANotify_DHCPCompleteHandler",
+			"mico_notify_DHCP_COMPLETED",
+			"connectFTCServer",
+			"_connectFTCServer",
+			"connectFTCServer",
+			"startLocalControllerService",
+			"HTTPGetHeaderField",
+			"&value, &valueSize",
+			"extraDataPtr",
+			"HTTPHeaderParse",
+			"_FTCRespondInComingMessage",
+			"easylinkServerIP",
+			"easylink_log(\"Get SSID: %s, Key: ",
+			"icoSystemConfig.configured !=",
+			"wlan",
+			"wlanc",
+			"icoSystemConfig.configured !=",
+			"CONFIG_DATA_SIZE",
+			"seedNum",
+			";\n",
+			"EasyLinkRecvAuthData",
+			"_easylinkConnectWiFi",
+			"easylink_sem",
+			"easylink_sem\n",
+			"JsonHTTPMe",
+			"EasyLinkIncommingJsonHTTPMessage",
+			"EasyLinkNotify_WifiStatusHandler",
+			"_easylinkConnectWiFi",
+			"easylink_sem",
+			"ConnectFTC_Timeout",
+			"reboot",
+			"threadexit",
+			"reboot",
+			"threadexit",
+			"_easylinkConnectWiFi",
+			"easylink_sem",
+			"ConnectFTC_Timeout",
+			"EasyLinkWillStgop",
+			"_Led_EL_timer",
+			"easylinkFTCConnect",
+			"EasyLinkNotify_EasyLinkCompleteHandler",
+			"startEasyLink",
+			"HAContext",
+			"EasyLinkNotify_WifiStatusHandler",
+			"char *str",
+			"char *str, int len",
+			"SECURITY_TYPE_E",
+			"ApListCallback",
+			"UwtPara_str",
+			"HANotify_WifiStatusHandler",
+			"mico_notifyWiFiStatus",
+			"DataToHexStringWithColons",
+			"6",
+			"HAContext",
+			"_led_EL_Timeout_handler",
+			"IWDG_SetReload",
+			"\"P\"",
+			"mfi_bonjour_send"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "COM.MXCHIP.HA.sublime-project",
+					"settings":
+					{
+						"buffer_size": 1247,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								258,
+								258
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/LocalTcpServer.c",
+					"settings":
+					{
+						"buffer_size": 4611,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1239,
+								1254
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 584.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"settings":
+					{
+						"buffer_size": 1600,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										318,
+										333
+									],
+									[
+										585,
+										600
+									],
+									[
+										827,
+										842
+									],
+									[
+										1115,
+										1130
+									],
+									[
+										1512,
+										1527
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								1139,
+								1139
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/MICOAppEntrance.c",
+					"settings":
+					{
+						"buffer_size": 2238,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								587,
+								597
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/Users/william/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/MICOAppDefine.h",
+					"settings":
+					{
+						"buffer_size": 2051,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								758,
+								758
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 11.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/UartRecv.c",
+					"settings":
+					{
+						"buffer_size": 1697,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								607,
+								607
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 397.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/Users/William/Develop/mxchipWNet Pro Demo@EMW316x/Demos/COM.MXCHIP.HA/HaProtocol.c",
+					"settings":
+					{
+						"buffer_size": 10826,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								385,
+								385
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2204.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.clang":
+	{
+		"height": 100.0
+	},
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"output.git":
+	{
+		"height": 100.0
+	},
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"",
+				"STM32F2xx_StdPeriph_Driver/src/stm32f2xx_i2c.c"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 222.0,
+	"status_bar_visible": true
+}
